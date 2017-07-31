@@ -6,3 +6,6 @@ This function is based off the following: http://docs.splunk.com/Documentation/S
 
 Invoke-SplunkBase is the base function that all the others are built on top of.  Anything you need the API to do that there is not already a specific function for can be called with this one function.
 
+Note about the Parameter 'outPutmode'.  In most cases a PSCustom Object will be the return value so outPutMode is largely an internal thing.  That being said, there were a lot of issues using json.  
+Xml is ... well .. ugly.  So I recommend you specify csv.
+
