@@ -221,3 +221,56 @@ Function Get-SplunkSearchExport{
     End{}
 }
 #endregion
+
+#region Get-SplunkListSavedSearches
+function Get-SplunkListSavedSearches{
+<#
+    .SYNOPSIS
+	    Get list of saved searches
+
+    .DESCRIPTION
+        Get list of saved searches	
+
+    .PARAMETER header
+        Header value (use Connect-splunk to get it)
+
+    .PARAMETER server
+        FQDN for splunk server
+
+    .PARAMETER port
+        splunk server port to connect to, port 8089 is the default
+
+    .PARAMETER complete
+       The default is to return a summary of search, use this switch to get all the details the system returns
+
+    .EXAMPLE
+	    Get-SplunkListSavedSearches -server $server -header $header
+
+    .NOTES
+	    
+#>
+    [CmdletBinding()]
+    [Alias()]
+    [OutputType([int])]
+    Param
+    (
+        [parameter(Mandatory)]
+        [string]$server,
+
+        [parameter(Mandatory)]
+        [System.Collections.Hashtable]$header,
+
+        [string]$port = "8089",
+
+        [switch]$complete
+    )
+
+    Begin{}
+    Process
+    {
+        if ($complete){return ((Invoke-SplunkBase -server $server -header $header -resourcePath 'saved/searches' -outPutmode json).entry)}
+        else{return ((Invoke-SplunkBase -server $server -header $header -resourcePath 'saved/searches' -outPutmode json).entry | Select name,author,updated,id)}
+    }
+    End{}
+}
+#endregion

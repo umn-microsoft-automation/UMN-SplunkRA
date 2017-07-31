@@ -9,3 +9,6 @@ $search = 'index=<fill in>  EventID=4625 OR EventID=4771 OR EventID=4740   Targe
 $search = 'index=<fill in>  source="WinEventLog:Security"   (EventID=4625 OR EventID=4771) Status=0xc0000234 OR 0xc000006d OR Status=0xc000006a OR Status=0x1*     NOT dest_nt_domain="*"  TargetUserName=***  TargetUserName!="*$" earliest=-24h@h latest=now | stats  values(Source_Workstation)  count(EventID) AS count  by TargetUserName |sort -count |head 20'
 $return = Get-SplunkSearchExport -server $server -header $header -search $search -outPutmode csv
 $return
+
+## get a list of saved searches
+Get-SplunkListSavedSearches -server $server -header $header
