@@ -121,7 +121,6 @@ Function Invoke-SplunkBase{
 	    
 #>
 
-
     [CmdletBinding()]
     param(
 
@@ -250,8 +249,6 @@ function Get-SplunkListSavedSearches{
 	    
 #>
     [CmdletBinding()]
-    [Alias()]
-    [OutputType([int])]
     Param
     (
         [parameter(Mandatory)]
@@ -270,6 +267,108 @@ function Get-SplunkListSavedSearches{
     {
         if ($complete){return ((Invoke-SplunkBase -server $server -header $header -resourcePath 'saved/searches' -outPutmode json).entry)}
         else{return ((Invoke-SplunkBase -server $server -header $header -resourcePath 'saved/searches' -outPutmode json).entry | Select name,author,updated,id)}
+    }
+    End{}
+}
+#endregion
+
+#region Get-SplunkSearchJobs
+function Get-SplunkSearchJobs{
+<#
+    .SYNOPSIS
+	    Get list of jobs or details about a specific job
+
+    .DESCRIPTION
+        Get list of jobs or details about a specific job	
+
+    .PARAMETER header
+        Header value (use Connect-splunk to get it)
+
+    .PARAMETER server
+        FQDN for splunk server
+
+    .PARAMETER port
+        splunk server port to connect to, port 8089 is the default
+
+    .PARAMETER sid
+       The default is to return a summary of jobs, this will also get the Search ID (sid) that you can feed back in to get more details about a job
+
+    .EXAMPLE
+	    Get-SplunkListSavedSearches -server $server -header $header
+
+    .NOTES
+	    
+#>
+    [CmdletBinding()]
+    Param
+    (
+        [parameter(Mandatory)]
+        [string]$server,
+
+        [parameter(Mandatory)]
+        [System.Collections.Hashtable]$header,
+
+        [string]$port = "8089",
+
+        [string]$sid
+    )
+
+    Begin{}
+    Process
+    {
+        if ($sid){return (Invoke-SplunkBase -server $server -header $header -resourcePath "search/jobs/$sid" -outPutmode csv)}
+        else{return (Invoke-SplunkBase -server $server -header $header -resourcePath 'search/jobs' -outPutmode csv | select label,user,sid | sort -Property label)}
+    }
+    End{}
+}
+#endregion
+
+#region Get-SplunkSearchJobsResults
+function Get-SplunkSearchJobsResults{
+<#
+    .SYNOPSIS
+	    Get Reults of a job
+
+    .DESCRIPTION
+        Get Reults of a job.  It can return a lot of data, consider piping through Select to narrow it down.	
+
+    .PARAMETER header
+        Header value (use Connect-splunk to get it)
+
+    .PARAMETER server
+        FQDN for splunk server
+
+    .PARAMETER port
+        splunk server port to connect to, port 8089 is the default
+
+    .PARAMETER sid
+       Search ID (sid), use Get-SplunkSearchJobs to get this
+
+    .EXAMPLE
+	    
+
+    .NOTES
+	    
+#>
+    [CmdletBinding()]
+    Param
+    (
+        [parameter(Mandatory)]
+        [string]$server,
+
+        [parameter(Mandatory)]
+        [System.Collections.Hashtable]$header,
+
+        [string]$port = "8089",
+
+        [parameter(Mandatory)]
+        [string]$sid
+    )
+
+    Begin{}
+    Process
+    {
+        return (Invoke-SplunkBase -server $server -header $header -resourcePath "search/jobs/$sid/results" -outPutmode csv)
     }
     End{}
 }

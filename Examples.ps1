@@ -12,3 +12,10 @@ $return
 
 ## get a list of saved searches
 Get-SplunkListSavedSearches -server $server -header $header
+
+# Get a list of Jobs
+Get-SplunkSearchJobs -server $server -header $header
+
+# Get results of a job, use Get-SplunkSearchJobs to get the sid
+
+Get-SplunkSearchJobsResults -server $server -header $header -sid $sid
