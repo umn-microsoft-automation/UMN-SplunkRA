@@ -148,8 +148,8 @@ Function Invoke-SplunkBase{
     {
         $uri = "https://$server`:$port/services/$resourcePath"
         if ($outPutmode -ne 'default'){$uri = $uri + "?output_mode=$outPutmode"}
-        if ($body){$data = (Invoke-WebRequest -Uri $uri -Headers $header -Body $body).Content}
-        else{$data = (Invoke-WebRequest -Uri $uri -Headers $header).Content}
+        if ($body){$data = (Invoke-WebRequest -Uri $uri -Headers $header -Body $body -UseBasicParsing ).Content}
+        else{$data = (Invoke-WebRequest -Uri $uri -Headers $header -UseBasicParsing ).Content}
         if ($outPutmode -eq 'csv'){ return ($data | ConvertFrom-Csv)}
         elseif ($outPutmode -eq 'json'){return ($data | ConvertFrom-Json)}
         else{return $data}
