@@ -82,9 +82,9 @@ add-type @"
     Process
     {    
         $uri = "https://$server`:$port/services/auth/login"
-        $return = (Invoke-RestMethod -Uri $uri -body "username=$($splunkCreds.UserName);password=$($splunkCreds.GetNetworkCredential().Password)" -Method Post -ContentType 'application/x-www-form-urlencoded').response
+        $return = (Invoke-RestMethod -Uri $uri -UseBasicParsing -body "username=$($splunkCreds.UserName);password=$($splunkCreds.GetNetworkCredential().Password)" -Method Post -ContentType 'application/x-www-form-urlencoded').response
         $session = $return.sessionKey
-        return ($header = @{"Authorization"= "Splunk $session"})
+        return (@{"Authorization"= "Splunk $session"})
     }
     End{}
 }
