@@ -17,7 +17,7 @@
 # based off http://dev.splunk.com/restapi 
 
 
-#region Connect-Splunk
+#region Connect-Splunk 
 Function Connect-Splunk{
 <#
     .SYNOPSIS
