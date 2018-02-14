@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-# based off http://dev.splunk.com/restapi 
+# based off http://dev.splunk.com/restapi  
 
 
 #region Connect-Splunk
