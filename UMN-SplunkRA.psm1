@@ -19,32 +19,37 @@
 
 #region Connect-Splunk
 Function Connect-Splunk{
-<#
-    .SYNOPSIS
-	    Connect to splunk server and header properly formatted
-    .DESCRIPTION
-	
-    .PARAMETER splunkCred
-        PS credential of user that has access
+    <#
+        .SYNOPSIS
+            Connect to splunk server and header properly formatted
+        
+        .DESCRIPTION
+            Connect to splunk server and header properly formatted
+        
+        .PARAMETER splunkCreds
+            PS credential of user that has access
 
-    .PARAMETER server
-        FQDN for splunk server
+        .PARAMETER server
+            FQDN for splunk server
 
-    .PARAMETER SkipCertificateCheck
-        Ignore bad SSL Certificates
+        .PARAMETER SkipCertificateCheck
+            Ignore bad SSL Certificates
 
-    .PARAMETER port
-        splunk server port to connect to, port 8089 is the default
+        .PARAMETER port
+            splunk server port to connect to, port 8089 is the default
 
-    .EXAMPLE
-	    $header = Connect-Splunk -splunkCreds $cred -SkipCertificateCheck -server 'splunk.mydomain.com'
+        .EXAMPLE
+            $header = Connect-Splunk -splunkCreds $cred -SkipCertificateCheck -server 'splunk.mydomain.com'
 
-    .NOTES
-	    # http://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#Authentication_and_authorization
-        For legacy automation systems dealing with cookies - 
-        -UseBasicParsing is included on the InvokeWebRequest - needed parsing for Orchestrator
-#>
+        .OUTPUTS
+            System.Collections.Hashtable[]
+            Header with Authentication information
 
+        .NOTES
+            # http://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#Authentication_and_authorization
+            For legacy automation systems dealing with cookies - 
+            -UseBasicParsing is included on the InvokeWebRequest - needed parsing for Orchestrator
+    #>
 
     [CmdletBinding()]
     param(
@@ -78,7 +83,7 @@ add-type @"
 "@
             [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
         }
-    }
+}
     Process
     {    
         $uri = "https://$server`:$port/services/auth/login"
@@ -92,34 +97,32 @@ add-type @"
 
 #region Invoke-SplunkBase
 Function Invoke-SplunkBase{
-<#
-    .SYNOPSIS
-	    Base function all other functions are built on
+    <#
+        .SYNOPSIS
+            Base function all other functions are built on
 
-    .DESCRIPTION
-	    Base function all other functions are built on
+        .DESCRIPTION
+            Base function all other functions are built on
 
-    .PARAMETER header
-        Header value (use Connect-splunk to get it)
+        .PARAMETER header
+            Header value (use Connect-splunk to get it)
 
-    .PARAMETER server
-        FQDN for splunk server
+        .PARAMETER server
+            FQDN for splunk server
 
-    .PARAMETER outPutmode
-        csv,xml,json data return type for call
+        .PARAMETER outPutmode
+            csv,xml,json data return type for call
 
-    .PARAMETER port
-        splunk server port to connect to, port 8089 is the default
+        .PARAMETER port
+            splunk server port to connect to, port 8089 is the default
 
-    .PARAMETER resourcePath
-        Api resoure path.
+        .PARAMETER resourcePath
+            Api resoure path.
 
-    .EXAMPLE
-	    
+        .EXAMPLE    
 
-    .NOTES
-	    
-#>
+        .NOTES	    
+    #>
 
     [CmdletBinding()]
     param(
@@ -160,35 +163,29 @@ Function Invoke-SplunkBase{
 
 #region Get-SplunkSearchExport
 Function Get-SplunkSearchExport{
-<#
-    .SYNOPSIS
-	    Get results for a search
+    <#
+        .SYNOPSIS
+            Get results for a search
 
-    .DESCRIPTION
-        Get results for a search	
+        .DESCRIPTION
+            Get results for a search	
 
-    .PARAMETER header
-        Header value (use Connect-splunk to get it)
+        .PARAMETER header
+            Header value (use Connect-splunk to get it)
 
-    .PARAMETER server
-        FQDN for splunk server
+        .PARAMETER server
+            FQDN for splunk server
 
-    .PARAMETER outPutmode
-        csv,xml,json data return type for call
+        .PARAMETER outPutmode
+            csv,xml,json data return type for call
 
-    .PARAMETER port
-        splunk server port to connect to, port 8089 is the default
+        .PARAMETER port
+            splunk server port to connect to, port 8089 is the default
 
-    .PARAMETER search
-        Realtime Search you want performed
+        .PARAMETER search
+            Realtime Search you want performed
 
-    .EXAMPLE
-	    
-
-    .NOTES
-	    
-#>
-
+    #>
 
     [CmdletBinding()]
     param(
