@@ -118,6 +118,9 @@ Function Invoke-SplunkBase{
 
         .PARAMETER resourcePath
             Api resoure path.
+        
+        .PARAMETER resultSize
+            Limit the number of results to return.  100 is the default.  Use zero to get all
 
         .EXAMPLE    
 
@@ -144,13 +147,20 @@ Function Invoke-SplunkBase{
 
         #[switch]$SkipCertificateCheck,
 
-        [string]$port = "8089"
+        [string]$port = "8089",
+
+        [string]$resultSize
     )
     Begin{}
     Process
     {
         $uri = "https://$server`:$port/services/$resourcePath"
-        if ($outPutmode -ne 'default'){$uri = $uri + "?output_mode=$outPutmode"}
+        if ($outPutmode -ne 'default'){$uri += "?output_mode=$outPutmode"}
+        if ($resultSize)
+        {
+            if ($outPutmode -ne 'default'){$uri += "&count=$resultSize"}
+            else {$uri += "?count=$resultSize"} 
+        }
         if ($body){$data = (Invoke-WebRequest -Uri $uri -Headers $header -Body $body -UseBasicParsing ).Content}
         else{$data = (Invoke-WebRequest -Uri $uri -Headers $header -UseBasicParsing ).Content}
         if ($outPutmode -eq 'csv'){ return ($data | ConvertFrom-Csv)}
@@ -341,6 +351,9 @@ function Get-SplunkSearchJobsResults{
     .PARAMETER sid
        Search ID (sid), use Get-SplunkSearchJobs to get this
 
+    .PARAMETER resultSize
+        Limit the number of results to return.  100 is the default.  Use zero to get all
+
     .EXAMPLE
 	    
 
@@ -359,13 +372,15 @@ function Get-SplunkSearchJobsResults{
         [string]$port = "8089",
 
         [parameter(Mandatory)]
-        [string]$sid
+        [string]$sid,
+
+        [string]$resultSize
     )
 
     Begin{}
     Process
     {
-        return (Invoke-SplunkBase -server $server -header $header -resourcePath "search/jobs/$sid/results" -outPutmode csv)
+        return (Invoke-SplunkBase -server $server -header $header -resourcePath "search/jobs/$sid/results" -outPutmode csv -resultSize $resultSize)
     }
     End{}
 }

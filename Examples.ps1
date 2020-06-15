@@ -1,7 +1,7 @@
 ﻿# Authenticate and get token
 $cred = Get-Credential
 $server = 'splunk.yourdomain.net'
-$header = Connect-Splunk -splunkCreds $cred  -server $serve
+$header = Connect-Splunk -splunkCreds $cred  -server $server
 # $header = Connect-Splunk -splunkCreds $cred -SkipCertificateCheck -server $server use this if splunk is using a cert not trusted.
 
 #### ON the fly search examples
@@ -14,7 +14,7 @@ $return
 Get-SplunkListSavedSearches -server $server -header $header
 
 # Get a list of Jobs
-Get-SplunkSearchJobs -server $server -header $header
+($jobList = Get-SplunkSearchJobs -server $server -header $header)
 
 # Get results of a job, use Get-SplunkSearchJobs to get the sid
 #
